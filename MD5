@@ -1,0 +1,15 @@
+930724e51a4982282b5dd022cd1781ac *DESCRIPTION
+5e9ac4ce093cb64e9a98dd03ae2b81f3 *NAMESPACE
+1d83b7f8b05b78fc04566c37ad5dfd85 *R/MarketMatching.R
+c48c95a9e0f9360071dd1b2a619ae845 *R/data.R
+38b1464688f7c827ee4d27ea2e432e50 *R/functions.R
+5d10b915ec0d42b0725b9075331a2455 *README.md
+a9c0d00cf0d0eb85c870f3534ffe89e6 *build/vignette.rds
+782601ee6ac0ec69a8159e9eb67056f5 *data/weather.rda
+1f52a3f524fc18ea30615dd85c637450 *inst/doc/MarketMatching-Vignette.Rmd
+a7e1785273df780c819c3a1718deeac3 *inst/doc/MarketMatching-Vignette.html
+fb457f1f2fa2d11f6b895e831004140c *man/MarketMatching.Rd
+04316306f9cb8ddfad5d357113c5e305 *man/best_matches.Rd
+b04e77006ae0893d0a4d32bd55e511ba *man/inference.Rd
+582ba551ed29c75e959192c5b8f4a763 *man/weather.Rd
+1f52a3f524fc18ea30615dd85c637450 *vignettes/MarketMatching-Vignette.Rmd

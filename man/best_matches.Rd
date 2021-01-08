@@ -13,8 +13,11 @@ best_matches(data=NULL,
              warping_limit=1,
              start_match_period=NULL,
              end_match_period=NULL,
-             matches=5,
-             dtw_emphasis=1)
+             matches=NULL,
+             dtw_emphasis=1, 
+             suggest_market_splits=FALSE,
+             splitbins=10,
+             log_for_splitting=FALSE)
 }
 \arguments{
 \item{data}{input data.frame for analysis. The dataset should be structured as "stacked" time series (i.e., a panel dataset).
@@ -40,21 +43,34 @@ Must be a character of format "YYYY-MM-DD" -- e.g., "2015-01-01"}
 \item{end_match_period}{the end date of the matching period (pre period).
 Must be a character of format "YYYY-MM-DD" -- e.g., "2015-10-01"}
 
-\item{matches}{Number of matching markets to keep in the output (to use less markets for inference, use the control_matches parameter when calling inference)}
+\item{matches}{Number of matching markets to keep in the output (to use less markets for inference, use the control_matches parameter when calling inference). Default is to keep all matches.}
 
 \item{dtw_emphasis}{Number from 0 to 1. The amount of emphasis placed on dtw distances, versus correlation, when ranking markets.
-Default is 1 (all emphasis on dtw). If emphasis is set to 0, all emphasis would be put on correlation.
+Default is 1 (all emphasis on dtw). If emphasis is set to 0, all emphasis would be put on correlation, which is recommended when optimal splits are requested.
 An emphasis of 0.5 would yield equal weighting.}
+
+\item{suggest_market_splits}{if set to TRUE, best_matches will return suggested test/control splits based on correlation and market sizes. Default is FALSE.
+For this option to be invoked, markets_to_be_matched must be NULL (i.e., you must run a full match).
+Note that the algorithm will force test and control to have the same number of markets. So if the total number of markets is odd, one market will be left out.}
+
+\item{splitbins}{Number of size-based bins used to stratify when splitting markets into test and control.
+Only markets inside the same bin can be matched. More bins means more emphasis on market size when splitting.
+Less bins means more emphasis on correlation. Default is 10.}
+
+\item{log_for_splitting}{This parameter determines if optimal splitting is based on correlations of the raw 
+matching metric values or the correlations of log(matching metric). Only relevant if suggest_market_splits is TRUE. Default is FALSE.}
 }
 \value{
 Returns an object of type \code{market_matching}. The object has the
 following elements:
 
-\item{\code{BestMatches}}{A data.frame that contains the best matches for each market in the input dataset}
+\item{\code{BestMatches}}{A data.frame that contains the best matches for each market. All stats reflect data after the market pairs have been joined by date. Thus SUMTEST and SUMCNTL can have smaller values than what you see in the Bins output table}
 \item{\code{Data}}{The raw data used to do the matching}
 \item{\code{MarketID}}{The name of the market identifier}
 \item{\code{MatchingMetric}}{The name of the matching variable}
 \item{\code{DateVariable}}{The name of the date variable}
+\item{\code{SuggestedTestControlSplits}}{Suggested test/control splits. SUMTEST and SUMCNTL are the total market volumes, not volume after joining with other markets. They're greater or equal to the values in the BestMatches file.}
+\item{\code{Bins}}{Bins used for splitting and corresponding volumes}
 }
 \description{
 \code{best_matches} finds the best matching control markets for each market in the dataset
@@ -62,6 +78,7 @@ using dynamic time warping (\code{dtw} package). The algorithm simply loops thro
 market in a parallel fashion, and then ranks by distance and/or correlation.
 }
 \examples{
+\dontrun{
 ##-----------------------------------------------------------------------
 ## Find the best matches for the CPH airport time series
 ##-----------------------------------------------------------------------
@@ -76,5 +93,6 @@ mm <- best_matches(data=weather,
                    start_match_period="2014-01-01",
                    end_match_period="2014-10-01")
 head(mm$BestMatches)
+}
 
 }
